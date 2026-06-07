@@ -1,38 +1,61 @@
-"use client";
-
-import React from "react";
+"use client"
 import {
     Form,
-    TextField,
-    Label,
     Input,
+    Select,
+    Label,
+    ListBox,
+    TextArea,
+    Switch,
     Button
 } from "@heroui/react";
-import { MapPin, UploadCloud, ChevronDown } from "lucide-react";
+import { MapPin, Calendar, ChevronDown } from "lucide-react";
+import { createJob } from "@/lib/actions/jobs";
 
-const handleJobPost = (e) => {
-    e.preventDefault();
 
-    const formData = new FormData(e.target);
 
-    const jobData = Object.fromEntries(formData.entries());
 
-    console.log("jobData:", jobData);
-}
+export default function PostJobForm() {
 
-export default function RegisterCompanyForm() {
+    const handleJobPost = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
+        const jobData = Object.fromEntries(formData.entries());
+
+        console.log("jobData.........:", jobData);
+
+        const newJobData = {
+            ...jobData,
+            status: "active",
+            companyID: "company123"
+        }
+        try {
+
+            const data = await await createJob(newJobData);
+
+            console.log(data);
+
+            alert(`${data.message}`);
+
+        } catch (error) {
+            alert(error.message);
+        }
+
+    }
+
     return (
         <div className="w-full flex items-center justify-center p-4">
-            {/* Form Container Card */}
             <div className="w-full max-w-[640px] bg-[#121212] border border-neutral-800/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all">
 
                 {/* Header Section */}
                 <div className="p-6 pb-4 flex flex-col items-start text-left select-none">
                     <h2 className="text-xl font-semibold tracking-tight text-white">
-                        Register New Company
+                        Post a New Job
                     </h2>
                     <p className="text-neutral-400 text-sm mt-1">
-                        Enter your business details to start hiring on HireLoop.
+                        Fill in the position details to start receiving applications on HireLoop.
                     </p>
                 </div>
 
@@ -44,164 +67,206 @@ export default function RegisterCompanyForm() {
                     onSubmit={handleJobPost}
                     className="p-6 flex flex-col gap-5 w-full">
 
-                    {/* Row 1: Company Name & Industry / Category */}
+                    {/* Row 1: Job Title & Job Category */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                        <TextField isRequired name="companyName" type="text" className="w-full">
-                            <Label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                                Company Name
-                            </Label>
-                            <Input
-                                name="companyName"
-                                placeholder="e.g. Acme Corp"
-                                className="w-full bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl px-3.5 h-11 text-sm outline-none focus:border-neutral-700 transition-all placeholder:text-neutral-600"
-                            />
-                        </TextField>
+                        <Input
+                            isRequired
+                            name="jobTitle"
+                            type="text"
+                            label="Job Title"
+                            labelPlacement="outside"
+                            placeholder="e.g. Senior Software Engineer"
+                            classNames={{
+                                label: "text-neutral-300 text-sm font-medium mb-1.5",
+                                inputWrapper: "bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 group-data-[focus=true]:border-neutral-700 rounded-xl h-11 transition-all",
+                                input: "text-neutral-200 text-sm placeholder:text-neutral-600"
+                            }}
+                        />
 
-                        <div className="w-full flex flex-col">
-                            <label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                                Industry / Category
-                            </label>
-                            <div className="relative w-full">
-                                <select
-                                    name="industry"
-                                    defaultValue="technology"
-                                    className="w-full bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl px-3.5 h-11 text-sm outline-none focus:border-neutral-700 transition-all appearance-none cursor-pointer"
-                                >
-                                    <option value="technology">Technology</option>
-                                    <option value="design">Design</option>
-                                    <option value="marketing">Marketing</option>
-                                    <option value="finance">Finance</option>
-                                </select>
-                                <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-neutral-400">
-                                    <ChevronDown size={16} />
-                                </div>
-                            </div>
-                        </div>
+                        {/* Job Category Select Component */}
+                        <Select isRequired name="jobCategory" className="w-full flex flex-col">
+                            <Label className="text-neutral-300 text-sm font-medium mb-1.5 text-left block">
+                                Job Category
+                            </Label>
+                            <Select.Trigger
+                                className="w-full bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 rounded-xl h-11 px-3.5 transition-all text-neutral-200 text-sm flex items-center justify-between"
+                            >
+                                <Select.Value placeholder="e.g. Technology" />
+                                <ChevronDown size={16} className="text-neutral-400" />
+                            </Select.Trigger>
+                            <Select.Popover className="bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl">
+                                <ListBox className="p-1">
+                                    <ListBox.Item id="technology" textValue="Technology" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Technology
+                                    </ListBox.Item>
+                                    <ListBox.Item id="design" textValue="Design" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Design
+                                    </ListBox.Item>
+                                    <ListBox.Item id="marketing" textValue="Marketing" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Marketing
+                                    </ListBox.Item>
+                                    <ListBox.Item id="finance" textValue="Finance" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Finance
+                                    </ListBox.Item>
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
                     </div>
 
-                    {/* Row 2: Website URL & Location */}
+                    {/* Row 2: Job Type & Application Date */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                        <TextField isRequired name="websiteUrl" type="text" className="w-full">
-                            <Label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                                Website URL
+                        {/* Job Type Select Component */}
+                        <Select isRequired name="jobType" className="w-full flex flex-col">
+                            <Label className="text-neutral-300 text-sm font-medium mb-1.5 text-left block">
+                                Job Type
                             </Label>
-                            <div className="flex w-full items-center bg-[#1c1c1c] border border-neutral-800 rounded-xl h-11 overflow-hidden focus-within:border-neutral-700 transition-all">
-                                <span className="bg-neutral-800/40 text-neutral-500 text-sm px-3.5 h-full flex items-center border-r border-neutral-800/80 select-none">
-                                    https://
-                                </span>
-                                <Input
-                                    name="websiteUrl"
-                                    placeholder="www.company.com"
-                                    className="w-full bg-transparent text-neutral-200 px-3.5 h-full text-sm outline-none border-none placeholder:text-neutral-600"
-                                />
-                            </div>
-                        </TextField>
+                            <Select.Trigger
+                                className="w-full bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 rounded-xl h-11 px-3.5 transition-all text-neutral-200 text-sm flex items-center justify-between"
+                            >
+                                <Select.Value placeholder="Full-time" />
+                                <ChevronDown size={16} className="text-neutral-400" />
+                            </Select.Trigger>
+                            <Select.Popover className="bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl">
+                                <ListBox className="p-1">
+                                    <ListBox.Item id="full-time" textValue="Full-time" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Full-time
+                                    </ListBox.Item>
+                                    <ListBox.Item id="part-time" textValue="Part-time" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Part-time
+                                    </ListBox.Item>
+                                    <ListBox.Item id="contract" textValue="Contract" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Contract
+                                    </ListBox.Item>
+                                    <ListBox.Item id="internship" textValue="Internship" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        Internship
+                                    </ListBox.Item>
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
 
-                        <TextField isRequired name="location" type="text" className="w-full">
-                            <Label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                                Location
-                            </Label>
-                            <div className="relative w-full flex items-center">
-                                <div className="absolute left-3.5 text-neutral-500 pointer-events-none">
-                                    <MapPin size={16} />
-                                </div>
-                                <Input
-                                    name="location"
-                                    placeholder="City, Country"
-                                    className="w-full bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl pl-10 pr-3.5 h-11 text-sm outline-none focus:border-neutral-700 transition-all placeholder:text-neutral-600"
-                                />
-                            </div>
-                        </TextField>
-                    </div>
-
-                    {/* Row 3: Employee Count Range & Company Logo Upload */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                        <div className="w-full flex flex-col">
-                            <label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                                Employee Count Range
-                            </label>
-                            <div className="relative w-full">
-                                <select
-                                    name="employeeCount"
-                                    defaultValue="1-10"
-                                    className="w-full bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl px-3.5 h-11 text-sm outline-none focus:border-neutral-700 transition-all appearance-none cursor-pointer"
-                                >
-                                    <option value="1-10">1-10 employees</option>
-                                    <option value="11-50">11-50 employees</option>
-                                    <option value="51-200">51-200 employees</option>
-                                    <option value="201+">201+ employees</option>
-                                </select>
-                                <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-neutral-400">
-                                    <ChevronDown size={16} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="w-full flex flex-col">
-                            <label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                                Company Logo
-                            </label>
-                            <label className="w-full bg-[#1c1c1c]/40 border border-neutral-800 border-dashed rounded-xl h-11 flex items-center px-3.5 gap-3 cursor-pointer hover:bg-[#1c1c1c]/70 transition-all select-none">
-                                <input
-                                    type="file"
-                                    name="companyLogo"
-                                    accept="image/png, image/jpeg"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                            alert(`Selected file: ${file.name}`);
-                                        }
-                                    }}
-                                />
-
-                                <div className="w-7 h-7 rounded-lg bg-neutral-800/60 border border-neutral-700/30 flex items-center justify-center text-neutral-400">
-                                    <UploadCloud size={14} />
-                                </div>
-
-                                <div className="flex flex-col text-left">
-                                    <span className="text-neutral-300 text-xs font-medium">Upload image</span>
-                                    <span className="text-[10px] text-neutral-500">PNG, JPG up to 5MB</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    {/* Row 4: Brief Description */}
-                    <div className="w-full flex flex-col">
-                        <Label className="text-neutral-300 text-sm font-medium mb-1.5 inline-block text-left w-full">
-                            Brief Description
-                        </Label>
-                        <textarea
-                            name="description"
-                            rows={4}
-                            placeholder="Tell us about your company's mission and culture..."
-                            className="w-full bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl p-3.5 text-sm outline-none focus:border-neutral-700 transition-all resize-none placeholder:text-neutral-600"
+                        <Input
+                            isRequired
+                            name="applicationDate"
+                            type="date"
+                            label="Application Date"
+                            labelPlacement="outside"
+                            placeholder="15/10/2024"
+                            endContent={<Calendar size={16} className="text-neutral-500 pointer-events-none" />}
+                            classNames={{
+                                label: "text-neutral-300 text-sm font-medium mb-1.5",
+                                inputWrapper: "bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 group-data-[focus=true]:border-neutral-700 rounded-xl h-11 transition-all",
+                                input: "text-neutral-200 text-sm placeholder:text-neutral-600 block"
+                            }}
                         />
                     </div>
 
-                    {/* Footer Execution Action Area Control Line */}
+                    {/* Row 3: Min Salary & Max Salary & Currency */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full items-end">
+                        <Input
+                            isRequired
+                            name="minSalary"
+                            type="number"
+                            label="Min Salary"
+                            labelPlacement="outside"
+                            placeholder="e.g. 50000"
+                            classNames={{
+                                label: "text-neutral-300 text-sm font-medium mb-1.5",
+                                inputWrapper: "bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 group-data-[focus=true]:border-neutral-700 rounded-xl h-11 transition-all",
+                                input: "text-neutral-200 text-sm placeholder:text-neutral-600"
+                            }}
+                        />
+
+                        <Input
+                            isRequired
+                            name="maxSalary"
+                            type="number"
+                            label="Max Salary"
+                            placeholder="e.g. 80000"
+                            classNames={{
+                                label: "text-neutral-300 text-sm font-medium mb-1.5",
+                                inputWrapper: "bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 group-data-[focus=true]:border-neutral-700 rounded-xl h-11 transition-all",
+                                input: "text-neutral-200 text-sm placeholder:text-neutral-600"
+                            }}
+                        />
+
+                        {/* Currency Select Component */}
+                        <Select isRequired name="currency" className="w-full flex flex-col">
+                            <Label className="text-neutral-300 text-sm font-medium mb-1.5 text-left block">
+                                Currency
+                            </Label>
+                            <Select.Trigger
+                                className="w-full bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 rounded-xl h-11 px-3.5 transition-all text-neutral-200 text-sm flex items-center justify-between"
+                            >
+                                <Select.Value placeholder="USD $" />
+                                <ChevronDown size={16} className="text-neutral-400" />
+                            </Select.Trigger>
+                            <Select.Popover className="bg-[#1c1c1c] border border-neutral-800 text-neutral-200 rounded-xl">
+                                <ListBox className="p-1">
+                                    <ListBox.Item id="usd" textValue="USD $" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        USD $
+                                    </ListBox.Item>
+                                    <ListBox.Item id="bdt" textValue="BDT ৳" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        BDT ৳
+                                    </ListBox.Item>
+                                    <ListBox.Item id="eur" textValue="EUR €" className="data-[hover=true]:bg-neutral-800 data-[hover=true]:text-white rounded-lg px-3 py-2 text-sm cursor-pointer">
+                                        EUR €
+                                    </ListBox.Item>
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
+                    </div>
+
+
+                    <Input aria-label="Name" name="jobLocation" className="w-64" placeholder="Job Location" />
+
+                    {/* Row 5: Responsibilities */}
+                    <TextArea
+                        isRequired
+                        name="responsibilities"
+                        label="Responsibilities"
+                        labelPlacement="outside"
+                        placeholder="List the core duties and responsibilities..."
+                        rows={4}
+                        classNames={{
+                            label: "text-neutral-300 text-sm font-medium mb-1.5",
+                            inputWrapper: "bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 group-data-[focus=true]:border-neutral-700 rounded-xl p-3.5 transition-all",
+                            input: "text-neutral-200 text-sm placeholder:text-neutral-600 resize-none"
+                        }}
+                    />
+
+                    {/* Row 6: Benefits (Optional) */}
+                    <TextArea
+                        name="benefits"
+                        label="Benefits (Optional)"
+                        labelPlacement="outside"
+                        placeholder="Describe the additional benefits..."
+                        rows={3}
+                        classNames={{
+                            label: "text-neutral-300 text-sm font-medium mb-1.5",
+                            inputWrapper: "bg-[#1c1c1c] border border-neutral-800 data-[hover=true]:border-neutral-700 group-data-[focus=true]:border-neutral-700 rounded-xl p-3.5 transition-all",
+                            input: "text-neutral-200 text-sm placeholder:text-neutral-600 resize-none"
+                        }}
+                    />
+
+                    {/* Footer Section */}
                     <div className="h-[1px] bg-neutral-800/60 w-full mt-2" />
 
-                    {/* Operations Execution Footer Layer Row layout */}
-                    <div className="p-4 bg-[#141414] flex justify-end items-center gap-3 w-full">
+                    <div className="p-2 bg-transparent flex justify-end items-center gap-3 w-full">
                         <Button
                             type="reset"
-                            variant="secondary"
-                            className="px-5 h-10 rounded-xl text-sm font-medium text-neutral-300 border border-neutral-800 hover:bg-neutral-800/60 transition-all cursor-pointer bg-transparent"
+                            className="px-5 h-10 rounded-xl text-sm font-medium text-neutral-300 border border-neutral-800 bg-transparent hover:bg-neutral-800/60 transition-all"
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
-                            className="px-5 h-10 rounded-xl text-sm font-semibold text-black bg-white hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
+                            className="px-5 h-10 rounded-xl text-sm font-semibold text-black bg-white hover:bg-neutral-200 transition-all shadow-md"
                         >
-                            Register Company
+                            Post Job
                         </Button>
                     </div>
 
                 </Form>
-
             </div>
         </div>
     );
