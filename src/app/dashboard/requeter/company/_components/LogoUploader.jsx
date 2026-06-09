@@ -29,7 +29,7 @@ export default function LogoUploader({ fileInputRef, onLogoChange, logoPreview, 
                 </div>
                 <div className="flex flex-col text-left">
                     <span className="text-xs font-medium text-neutral-200">
-                        {uploadingLogo ? "Uploading..." : "Upload image"}
+                        {uploadingLogo ? "Uploading..." : "Upload Logo"}
                     </span>
                     <span className="text-[10px] text-neutral-500">PNG, JPG up to 5MB</span>
                 </div>

@@ -3,8 +3,9 @@
 import React, { useState, useRef } from "react";
 import CompanyFormMode from "./CompanyFormMode"; // কাস্টম পাথ দিন
 import CompanyViewMode from "./CompanyViewMode"; // কাস্টম পাথ দিন
+import { createCompany } from "@/lib/actions/companies";
 
-export default function CompanyProfileManager() {
+export default function CompanyProfileManager({requeterId}) {
     const [company, setCompany] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -55,11 +56,16 @@ export default function CompanyProfileManager() {
             employeeCount: formData.get("employeeCount"),
             logo: logoUrl || (company ? company.logo : ""),
             description: formData.get("description"),
-            status: company ? company.status : "Pending"
+            status: company ? company.status : "Pending",
+            requeterId: requeterId,
         };
 
         setCompany(companyData);
+
+        createCompany(companyData);
+
         setIsEditing(false);
+        console.log("company...........", companyData);
     };
 
     // Condition 1: No Company or Currently Editing
@@ -73,7 +79,7 @@ export default function CompanyProfileManager() {
                 uploadingLogo={uploadingLogo}
                 onLogoChange={handleLogoChange}
                 onSubmit={handleSubmit}
-                onCancel={() => isEditing ? setIsEditing(false) : setCompany(null)}
+                onCancel={() => isEditing && setIsEditing(false)}
             />
         );
     }

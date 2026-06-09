@@ -9,7 +9,7 @@ export function DashboardSideBar() {
         { icon: House, label: "Home", link: "/dashboard/requeter" },
         { icon: Magnifier, label: "Jobs", link: "/dashboard/requeter/jobs" },
         { icon: Bell, label: "Create A Job", link: "/dashboard/requeter/jobs/new" },
-        { icon: Envelope, label: "Messages", link: "/dashboard/requeter" },
+        { icon: Envelope, label: "Company", link: "/dashboard/requeter/company" },
         { icon: Person, label: "Profile", link: "/dashboard/requeter" },
         { icon: Gear, label: "Settings", link: "/dashboard/requeter" },
     ];
