@@ -5,8 +5,8 @@ import CompanyFormMode from "./CompanyFormMode"; // কাস্টম পাথ
 import CompanyViewMode from "./CompanyViewMode"; // কাস্টম পাথ দিন
 import { createCompany } from "@/lib/actions/companies";
 
-export default function CompanyProfileManager({requeterId}) {
-    const [company, setCompany] = useState(null);
+export default function CompanyProfileManager({ requeterId, requeterCompany }) {
+    const [company, setCompany] = useState(requeterCompany);
     const [isEditing, setIsEditing] = useState(false);
     const [uploadingLogo, setUploadingLogo] = useState(false);
     const [logoPreview, setLogoPreview] = useState("");

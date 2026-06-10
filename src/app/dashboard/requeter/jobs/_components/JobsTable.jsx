@@ -1,23 +1,10 @@
+
 import { Table, Button } from "@heroui/react";
 import { Edit2, Trash2 } from "lucide-react";
 
-export default function JobTable({ jobs }) {
-    // const jobData = {
-    //     _id: "6a24f5a3f71d463dc8a74259",
-    //     jobTitle: "React Developer",
-    //     jobCategory: "design",
-    //     jobType: "full-time",
-    //     applicationDate: "2026-06-27",
-    //     minSalary: "15000",
-    //     maxSalary: "30000",
-    //     currency: "bdt",
-    //     jobLocation: "Dhaka",
-    //     responsibilities: "lorem......",
-    //     benefits: "lorem.........",
-    //     status: "active",
-    //     companyID: "company123"
-    // };
+export default async  function JobTable ({ jobs }) {
 
+    
     return (
         <div className="w-full max-w-4xl mx-auto p-6 bg-[#121212] rounded-2xl border border-neutral-800/80 shadow-2xl">
             <Table

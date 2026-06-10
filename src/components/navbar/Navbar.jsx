@@ -60,6 +60,7 @@ export default function Navbar() {
 
                 {/* Divider Element */}
                 <div className="h-5 w-[1px] bg-neutral-800 mx-1" />
+                <p>Hi, { user?.name}</p>
 
                 {/* Action Controls */}
                 {

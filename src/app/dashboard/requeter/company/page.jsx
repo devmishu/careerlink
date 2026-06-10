@@ -14,7 +14,7 @@ const CompanyManagePage = async () => {
 
     return (
         <div>
-            <CompanyProfileManager requeterId={user?.id} />
+            <CompanyProfileManager requeterId={user?.id} requeterCompany={myCompany.data}/>
         </div>
     );
 };
