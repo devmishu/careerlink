@@ -5,8 +5,14 @@ import { Check } from "@gravity-ui/icons";
 import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function SignInPage() {
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirect") || '/';
+
+    const router = useRouter();
 
 
     const onSubmit = async (e) => {
@@ -21,13 +27,13 @@ export default function SignInPage() {
         const { data, error } = await authClient.signIn.email({
             email,
             password,
-            callbackURL: "/",
         });
 
         console.log("data:", { data, error });
 
         if (data) {
             toast.success('Login successfully');
+            router.push(redirectTo);
         }
         if (error) {
             toast.error(error.message);
@@ -167,12 +173,12 @@ export default function SignInPage() {
                 {/* Account Creation Redirection Link */}
                 <p className="text-center text-sm text-slate-600 dark:text-neutral-400 mt-6 select-none">
                     Don't have an account?{" "}
-                    <a
-                        href="#"
+                    <Link
+                        href={`/signup?redirect=${redirectTo}`}
                         className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-400 font-semibold transition-colors decoration-2 hover:underline"
                     >
                         Sign Up
-                    </a>
+                    </Link>
                 </p>
 
             </div>

@@ -4,11 +4,15 @@ import React, { useState } from "react";
 import { Check } from "@gravity-ui/icons";
 import { Button, Description, FieldError, Form, Input, Label, TextField, Radio, RadioGroup } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function SignUpPage() {
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirect") || "/";
 
+    const router = useRouter();
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -36,11 +40,12 @@ export default function SignUpPage() {
         });
 
         console.log("data:", { data, error });
-        
+
 
         if (data) {
             toast.success('Account created successfully');
-            redirect('/signin');
+            // redirect(redirectTo);
+            router.push(redirectTo);
 
         }
         if (error) {
@@ -248,12 +253,12 @@ export default function SignUpPage() {
                 {/* Existing Membership Account Redirection Link */}
                 <p className="text-center text-sm text-slate-600 dark:text-neutral-400 mt-6 select-none">
                     Already have an account?{" "}
-                    <a
-                        href="#"
+                    <Link
+                        href={`/signin?redirect=${redirectTo}`}
                         className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-400 font-semibold transition-colors decoration-2 hover:underline"
                     >
                         Sign In
-                    </a>
+                    </Link>
                 </p>
 
             </div>

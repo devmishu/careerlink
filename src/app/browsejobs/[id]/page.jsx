@@ -8,8 +8,9 @@ import {
     ArrowLeft,
 } from "lucide-react";
 
-import { Card, Button, Link, Chip } from "@heroui/react";
+import { Card, Button, Chip } from "@heroui/react";
 import { getJobsById } from "@/lib/api/jobs";
+import Link from "next/link"; 
 
 
 
@@ -188,14 +189,14 @@ const JobDetails = async ({ params }) => {
                             </div>
                         </div>
 
-                        <Button
+                        <Link href={`/browsejobs/${id}/apply`}
                             color="primary"
                             size="lg"
-                            className="font-bold text-medium w-full shadow-md"
+                            className=" font-bold text-medium w-full shadow-md bg-blue-500 text-center py-3 rounded-md"
                             radius="xl"
                         >
                             Apply For This Job
-                        </Button>
+                        </Link>
                     </Card>
                 </div>
             </div>
