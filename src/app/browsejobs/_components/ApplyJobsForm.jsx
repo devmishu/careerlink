@@ -1,9 +1,11 @@
 "use client"
 import React, { useState } from "react";
 import { Xmark } from "@gravity-ui/icons";
+import { submitApplication } from "@/lib/actions/application";
 
 export default function ApplyJobsForm({ applicant, job, onCancel }) {
     const [submitting, setSubmitting] = useState(false);
+    console.log("applicant.............", applicant);
 
     const experienceOptions = [
         { label: "Fresher / Entry Level", value: "fresher" },
@@ -20,15 +22,26 @@ export default function ApplyJobsForm({ applicant, job, onCancel }) {
         const formData = new FormData(e.currentTarget);
         const applicationData = Object.fromEntries(formData.entries());
 
-        try {
-            console.log("Application Submitted Data:", applicationData);
+        console.log(applicationData);
+        const submitssionData = {
+            ...applicationData,
+            jobId: job?._id,
+            jobTitle: job?.jobTitle,
+            companyName: job?.companyName,
+            applicantName: applicant?.name,
+            applicantId: applicant?.id,
+            applicantEmail: applicant?.email,
+        }
 
-            // Your API logic here:
-            // const res = await fetch("/api/jobs/apply", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ ...applicationData, jobId: job?.id }),
-            // });
+        try {
+
+
+            const data = await submitApplication(submitssionData);
+
+
+            console.log(data);
+
+            alert(`${data.message}`);
 
         } catch (error) {
             console.error("Submission failed:", error);
