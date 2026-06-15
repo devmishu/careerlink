@@ -5,6 +5,7 @@ import ApplyJobsForm from '../../_components/ApplyJobsForm';
 import { getJobsById } from '@/lib/api/jobs';
 import { getApplicationByUser } from '@/lib/api/applications';
 import Link from 'next/link';
+import { getJPlanById, getPlanById } from '@/lib/api/plan';
 
 const ApplyPage = async ({ params }) => {
     const { id } = await params;
@@ -33,13 +34,15 @@ const ApplyPage = async ({ params }) => {
     const job = await getJobsById(id);
     const applications = await getApplicationByUser(user?.id);
 
-    const plan = {
-        name: 'Free Plan',
-        maxApplicationsPerMonth: 3
-    };
+    const subPlan = await getPlanById(user?.plan || 'seeker-free');
+    // const subPlan = await getPlanById('seeker-pro');
+
+    const plan = subPlan.data;
+    console.log("plan.....", plan);
+
 
     const currentCount = applications?.data?.length || 0;
-    const maxCount = plan.maxApplicationsPerMonth;
+    const maxCount = plan.maxApplicationPerMonth;
     const hasRemainingApplications = currentCount < maxCount;
     const usagePercentage = Math.min((currentCount / maxCount) * 10, 10) * 10;
 

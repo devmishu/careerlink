@@ -3,14 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function Success() {
-    // Mock receipt details to match our design tier
-    const transactionDetails = {
-        id: "TXN-98481-NX7",
-        date: "June 13, 2026",
-        plan: "Pro Plan (Job Seeker)",
-        amount: "$19.00",
-        paymentMethod: "•••• •••• •••• 4242"
+// transaction প্রপসটি এখানে রিসিভ করা হচ্ছে
+export default function SuccessCard({ transaction }) {
+
+    // কোনো কারণে প্রপস না আসলে বা ফেইল করলে সেফটি ফলব্যাক অবজেক্ট
+    const details = transaction || {
+        id: "TXN-UNKNOWN",
+        date: new Date().toLocaleDateString(),
+        planName: "Pro Plan Upgrade",
+        amount: "$0.00",
+        paymentMethod: "Card Authorized",
+        customerEmail: "your registered email"
     };
 
     return (
@@ -55,23 +58,27 @@ export default function Success() {
                     <div className="space-y-3">
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-[#a1a1aa]">Activated Tier</span>
-                            <span className="font-semibold text-white">{transactionDetails.plan}</span>
+                            <span className="font-semibold text-white">{details.planName}</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-[#a1a1aa]">Amount Charged</span>
-                            <span className="font-bold text-emerald-400">{transactionDetails.amount}</span>
+                            <span className="font-bold text-emerald-400">{details.amount}</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                            <span className="text-[#a1a1aa]">Transaction ID</span>
-                            <span className="font-mono text-xs text-[#e4e4e7]">{transactionDetails.id}</span>
+                            <span className="text-[#a1a1aa]">Invoice Session ID</span>
+                            <span className="font-mono text-xs text-[#e4e4e7] max-w-[180px] truncate" title={details.id}>
+                                {details.id}
+                            </span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                            <span className="text-[#a1a1aa]">Payment Method</span>
-                            <span className="text-[#e4e4e7] text-xs">{transactionDetails.paymentMethod}</span>
+                            <span className="text-[#a1a1aa]">Status</span>
+                            <span className="text-emerald-400 text-xs bg-emerald-950/50 border border-emerald-500/20 px-2 py-0.5 rounded-md font-medium">
+                                Paid
+                            </span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-[#a1a1aa]">Date</span>
-                            <span className="text-[#e4e4e7]">{transactionDetails.date}</span>
+                            <span className="text-[#e4e4e7]">{details.date}</span>
                         </div>
                     </div>
                 </div>
@@ -98,7 +105,7 @@ export default function Success() {
 
                 {/* Safety / Help footer message */}
                 <p className="text-[#71717a] text-xs mt-8">
-                    A confirmation email along with your full PDF invoice has been sent to your registered account profile email.
+                    A confirmation email has been sent to <span className="text-zinc-300 font-medium">{details.customerEmail}</span> along with your payment records.
                 </p>
 
             </div>

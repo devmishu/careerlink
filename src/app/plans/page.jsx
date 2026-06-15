@@ -14,6 +14,7 @@ export default function PlanPage() {
         seeker: [
             {
                 name: 'Free',
+                id: "seeker-free",
                 price: '0',
                 period: '/forever',
                 tagline: 'Start exploring your next career move:',
@@ -32,6 +33,7 @@ export default function PlanPage() {
             },
             {
                 name: 'Pro',
+                id: "seeker-pro",
                 price: '19',
                 period: '/month',
                 tagline: 'Accelerate your daily job search hunt:',
@@ -50,6 +52,7 @@ export default function PlanPage() {
             },
             {
                 name: 'Premium',
+                id: "seeker-premium",
                 price: '39',
                 period: '/month',
                 tagline: 'Maximum visibility and elite access:',
@@ -70,6 +73,7 @@ export default function PlanPage() {
         recruiter: [
             {
                 name: 'Free',
+                id: "recruiter-free",
                 price: '0',
                 period: '/forever',
                 tagline: 'Great for a company\'s first year of hiring:',
@@ -87,6 +91,7 @@ export default function PlanPage() {
             },
             {
                 name: 'Growth',
+                id: "recruiter-growth",
                 price: '49',
                 period: '/month',
                 tagline: 'Scale your team hiring velocity:',
@@ -105,6 +110,7 @@ export default function PlanPage() {
             },
             {
                 name: 'Enterprise',
+                id: "recruiter-enterprise",
                 price: '149',
                 period: '/month',
                 tagline: 'Full power sourcing suite for global teams:',
@@ -217,6 +223,7 @@ export default function PlanPage() {
                             {/* Standard / Highlighted Call To Action button */}
 
                             <form action="/api/checkout_sessions" method="POST">
+                                <input type="hidden" name='plan-id' value={plan.id} />
                                 <section>
 
                                     <button type="submit" role="link"

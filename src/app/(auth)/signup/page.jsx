@@ -14,7 +14,10 @@ export default function SignUpPage() {
 
     const router = useRouter();
 
+
+
     const onSubmit = async (e) => {
+
         e.preventDefault();
 
         const formData = new FormData(e.target);
@@ -31,11 +34,14 @@ export default function SignUpPage() {
         //     return;
         // } 
 
+        const plan = role === 'seeker' ? 'seeker-free' : 'recruiter-free';
 
         const { data, error } = await authClient.signUp.email({
             name,
             email,
-            password, role
+            password,
+            role,
+            plan
 
         });
 
@@ -194,8 +200,8 @@ export default function SignUpPage() {
                         <FieldError className="text-red-500 text-xs mt-1" />
                     </TextField>
 
-                    <RadioGroup defaultValue="seeker" name="role">
-                        <Label>Select Role</Label>
+                    <RadioGroup defaultValue="seeker" name="role" >
+                        <Label>Select Role</Label> 
                         <div className="flex gap-5 w-full">
                             <Radio value="seeker">
                                 <Radio.Control>
