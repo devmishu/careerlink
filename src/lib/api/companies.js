@@ -1,12 +1,12 @@
-import { serverFetch } from "../core/server";
+import { protectedFetch } from "../core/server";
 
 
 
 
 export const getCompany = async (requeterId) => {
-    return serverFetch(`/api/my/companis?requeterId=${requeterId}`);
+    return protectedFetch(`/api/my/companis?requeterId=${requeterId}`);
 }
 
 export const getCompanies = async () => {
-    return serverFetch(`/api/companies`);
+    return protectedFetch(`/api/companies`);
 }

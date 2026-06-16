@@ -29,7 +29,7 @@ export default function JobListit({jobsData}) {
                 {/* Header Section */}
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-neutral-100">Explore Open Positions</h1>
-                    <p className="text-neutral-400 mt-1">Find your next frontend role at Uber Bangladesh.</p>
+                    <p className="text-neutral-400 mt-1">Find your next frontend role at Uber Bangladesh. {jobsData.length}</p>
                 </div>
 
                 {/* Search & Filter Bar Section */}
