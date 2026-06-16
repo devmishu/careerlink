@@ -9,7 +9,7 @@ import {
     Switch,
     Button
 } from "@heroui/react";
-import { MapPin, Calendar, ChevronDown, AlertTriangle, Clock } from "lucide-react";
+import { Calendar, ChevronDown, AlertTriangle, Clock } from "lucide-react";
 import { createJob } from "@/lib/actions/jobs";
 
 export default function PostJobForm({ company }) {

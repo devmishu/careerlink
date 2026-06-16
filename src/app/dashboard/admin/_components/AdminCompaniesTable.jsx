@@ -1,8 +1,9 @@
 "use client";
 
+import { updateCompany } from "@/lib/actions/companies";
 import React from "react";
 
-export default function AdminCompaniesTable({ companies = [], onApprove, onReject }) {
+export default function AdminCompaniesTable({ companies = [], onReject }) {
 
     // স্ট্যাটাস টেক্সট এবং ডটের কালার সেট করার জন্য হেল্পার
     const getStatusBadge = (status) => {
@@ -15,6 +16,18 @@ export default function AdminCompaniesTable({ companies = [], onApprove, onRejec
                 return { text: "Pending", dot: "bg-amber-500", textClass: "text-amber-500" };
         }
     };
+
+    const handleApprove = async (id, data) => {
+        const result = await updateCompany(id, { status: "Approved" });
+
+        console.log("approved result............", result);
+    }
+
+    const handleonReject = async (id, data) => {
+        const result = await updateCompany(id, { status: "Rejected" });
+
+        console.log("approved result............", result);
+    }
 
     return (
         <div className="w-full max-w-6xl mx-auto p-6 bg-[#121212] rounded-2xl border border-neutral-800/80 shadow-2xl">
@@ -62,7 +75,7 @@ export default function AdminCompaniesTable({ companies = [], onApprove, onRejec
                                     {/* Industry Badge */}
                                     <td className="py-4.5 align-middle">
                                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-neutral-900 border border-neutral-800 text-neutral-400">
-                                            {company.industry || "Technology"}
+                                            {company.industry}
                                         </span>
                                     </td>
 
@@ -86,7 +99,7 @@ export default function AdminCompaniesTable({ companies = [], onApprove, onRejec
                                         <div className="flex items-center justify-end gap-2">
                                             {company.status !== "Approved" && (
                                                 <button
-                                                    onClick={() => onApprove && onApprove(company._id)}
+                                                    onClick={() => handleApprove && handleApprove(company._id)}
                                                     className="px-3 py-1.5 bg-emerald-950/30 hover:bg-emerald-900/40 border border-emerald-900/60 text-emerald-400 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
                                                 >
                                                     Approve
@@ -94,7 +107,7 @@ export default function AdminCompaniesTable({ companies = [], onApprove, onRejec
                                             )}
                                             {company.status !== "Rejected" && (
                                                 <button
-                                                    onClick={() => onReject && onReject(company._id)}
+                                                    onClick={() => handleonReject && handleonReject(company._id)}
                                                     className="px-3 py-1.5 bg-rose-950/30 hover:bg-rose-900/40 border border-rose-900/60 text-rose-400 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
                                                 >
                                                     Reject

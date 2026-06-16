@@ -7,4 +7,4 @@ const AdminCompanisPage = async () => {
     return <AdminCompaniesTable companies={companies?.data} />
 };
 
-export default AdminCompanisPage;
+export default AdminCompanisPage; 
