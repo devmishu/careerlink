@@ -25,6 +25,7 @@ export default function Navbar() {
     const dashboardLinks = {
         seeker: "/dashboard/seeker",
         requeter: "/dashboard/requeter",
+        admin: "/dashboard/admin",
     }
 
     const navLinks = [
