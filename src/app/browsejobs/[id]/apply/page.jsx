@@ -5,7 +5,7 @@ import ApplyJobsForm from '../../_components/ApplyJobsForm';
 import { getJobsById } from '@/lib/api/jobs';
 import { getApplicationByUser } from '@/lib/api/applications';
 import Link from 'next/link';
-import { getJPlanById, getPlanById } from '@/lib/api/plan';
+import { getPlanById } from '@/lib/api/plan';
 
 const ApplyPage = async ({ params }) => {
     const { id } = await params;

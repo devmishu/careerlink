@@ -31,6 +31,7 @@ export default function ApplyJobsForm({ applicant, job, onCancel }) {
             applicantName: applicant?.name,
             applicantId: applicant?.id,
             applicantEmail: applicant?.email,
+            status: "Applied"
         }
 
         try {

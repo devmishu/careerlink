@@ -6,6 +6,8 @@ import { ThemeSwitch } from "./Themetogle";
 import { signOut, useSession } from "@/lib/auth-client";
 import Link from "next/link";
 
+
+
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const session = useSession();
@@ -17,6 +19,34 @@ export default function Navbar() {
 
     const handleSignout = () => {
         signOut();
+    };
+    // Navigation Links Array
+
+    const dashboardLinks = {
+        seeker: "/dashboard/seeker",
+        requeter: "/dashboard/requeter",
+    }
+
+    const navLinks = [
+        {
+            label: "Browse Jobs",
+            href: "/browsejobs"
+        },
+        {
+            label: "Company",
+            href: "/dashboard/requeter/company"
+        },
+        {
+            label: "Pricing",
+            href: "/plans"
+        }
+    ];
+
+    if (user?.email) {
+        navLinks.push({
+            label: "Dashboard",
+            href: dashboardLinks[user?.role || "seeker"]
+        })
     }
 
     return (
@@ -47,34 +77,35 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-6">
                 {/* Central Pill Nav Container */}
                 <div className="flex items-center gap-6 bg-neutral-900/40 dark:bg-neutral-900/60 border border-neutral-800/50 rounded-full px-6 py-2">
-                    <a href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors">
-                        Browse Jobs
-                    </a>
-                    <a href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors">
-                        Company
-                    </a>
-                    <a href="#" className="text-secondary hover:text-primary text-sm font-medium transition-colors">
-                        Pricing
-                    </a>
+                    {navLinks.map((link, index) => (
+                        <Link
+                            key={index}
+                            href={link.href}
+                            className="text-secondary hover:text-primary text-sm font-medium transition-colors"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                 </div>
 
                 {/* Divider Element */}
                 <div className="h-5 w-[1px] bg-neutral-800 mx-1" />
-                <p>Hi, { user?.name}</p>
+                <p>Hi, {user?.name}</p>
 
                 {/* Action Controls */}
-                {
-                    user ? <a
+                {user ? (
+                    <a
                         onClick={() => handleSignout()}
-
-                        href="#" className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-400 font-medium text-sm transition-colors">
+                        href="#"
+                        className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-400 font-medium text-sm transition-colors"
+                    >
                         Sign Out
-                    </a> :
-                        <Link href="/signin" className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-400 font-medium text-sm transition-colors">
-                            Sign In
-                        </Link>
-                }
-
+                    </a>
+                ) : (
+                    <Link href="/signin" className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-400 font-medium text-sm transition-colors">
+                        Sign In
+                    </Link>
+                )}
 
                 <button className="bg-white hover:bg-neutral-100 text-neutral-950 font-semibold px-5 h-10 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer">
                     Get Started
@@ -93,19 +124,40 @@ export default function Navbar() {
             {/* Mobile Drawer Overlay */}
             {isOpen && (
                 <div className="absolute top-20 left-0 w-full bg-neutral-950 border-b border-neutral-900 flex flex-col p-6 gap-4 md:hidden z-40">
-                    <a href="#" className="text-secondary hover:text-primary text-lg py-1" onClick={() => setIsOpen(false)}>
-                        Browse Jobs
-                    </a>
-                    <a href="#" className="text-secondary hover:text-primary text-lg py-1" onClick={() => setIsOpen(false)}>
-                        Company
-                    </a>
-                    <a href="#" className="text-secondary hover:text-primary text-lg py-1" onClick={() => setIsOpen(false)}>
-                        Pricing
-                    </a>
+                    {navLinks.map((link, index) => (
+                        <Link
+                            key={index}
+                            href={link.href}
+                            className="text-secondary hover:text-primary text-lg py-1"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
+
                     <hr className="border-neutral-900 my-1" />
-                    <a href="#" className="text-indigo-400 hover:text-indigo-300 font-medium text-lg py-1" onClick={() => setIsOpen(false)}>
-                        Sign In
-                    </a>
+
+                    {user ? (
+                        <a
+                            onClick={() => {
+                                handleSignout();
+                                setIsOpen(false);
+                            }}
+                            href="#"
+                            className="text-indigo-400 hover:text-indigo-300 font-medium text-lg py-1"
+                        >
+                            Sign Out
+                        </a>
+                    ) : (
+                        <Link
+                            href="/signin"
+                            className="text-indigo-400 hover:text-indigo-300 font-medium text-lg py-1"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Sign In
+                        </Link>
+                    )}
+
                     <button className="w-full bg-white text-neutral-950 font-semibold h-11 rounded-xl active:scale-[0.98] transition-all mt-2 cursor-pointer">
                         Get Started
                     </button>
