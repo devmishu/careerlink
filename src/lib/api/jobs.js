@@ -7,8 +7,8 @@ export const getCompanyJobs = async (companyID) => {
     return res.json();
 }
 
-export const getAllJobs = async () => {
-    return serverFetch(`/api/jobs`);
+export const getAllJobs = async (quaryString) => {
+    return serverFetch(`/api/jobs?${quaryString}`);
 }
 
 export const getJobsById = async (id) => {

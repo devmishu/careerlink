@@ -1,26 +1,67 @@
 // app/jobs/page.jsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, TextField, Label, Input } from "@heroui/react";
 import { JobCard } from "./JobCard";
+import { useRouter } from "next/navigation";
+import { PaginationWithSummary } from "../common/PaginationWithSummary";
 
-export default function JobListit({jobsData}) {
+export default function JobListit({ jobsData, filters, total }) {
     // Search and Filter States
-    const [searchQuery, setSearchQuery] = useState("");
-    const [selectedLocation, setSelectedLocation] = useState("");
-    const [selectedJobType, setSelectedJobType] = useState("");
+    const [searchQuery, setSearchQuery] = useState(filters.search || "");
+    const [selectedLocation, setSelectedLocation] = useState(filters.jobLocation || "all");
+    const [selectedJobType, setSelectedJobType] = useState(filters.jobType || "all");
     const [maxSalaryLimit, setMaxSalaryLimit] = useState("");
+    const [page, setPage] = useState(1);
+
 
     // Filtering Logic
-    const filteredJobs = jobsData.filter((job) => {
-        const matchesSearch = job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesLocation = selectedLocation === "" || job.jobLocation.toLowerCase() === selectedLocation.toLowerCase();
-        const matchesJobType = selectedJobType === "" || job.jobType.toLowerCase() === selectedJobType.toLowerCase();
-        const matchesSalary = maxSalaryLimit === "" || Number(job.maxSalary) <= Number(maxSalaryLimit);
+    // const jobsData? = jobsData?.filter((job) => {
+    //     const matchesSearch = job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase());
+    //     const matchesLocation = selectedLocation === "" || job.jobLocation.toLowerCase() === selectedLocation.toLowerCase();
+    //     const matchesJobType = selectedJobType === "" || job.jobType.toLowerCase() === selectedJobType.toLowerCase();
+    //     const matchesSalary = maxSalaryLimit === "" || Number(job.maxSalary) <= Number(maxSalaryLimit);
 
-        return matchesSearch && matchesLocation && matchesJobType && matchesSalary;
-    });
+    //     return matchesSearch && matchesLocation && matchesJobType && matchesSalary;
+    // });
+
+    const router = useRouter();
+
+
+    useEffect(() => {
+        const sp = new URLSearchParams();
+
+        // যদ্রি ড্রপডাউনের ভ্যালু খালি ("") অথবা "all" না হয়, তাহলে URL-এ সেট করবে
+        if (selectedJobType && selectedJobType !== 'all') {
+            sp.set('jobType', selectedJobType);
+        } else {
+            // "All Types" বা "all" সিলেক্ট করলে URL থেকে jobType রিমুভ হয়ে যাবে
+            sp.delete('jobType');
+        }
+        if (selectedLocation && selectedLocation !== 'all') {
+            sp.set('jobLocation', selectedLocation);
+        } else {
+            // "All Types" বা "all" সিলেক্ট করলে URL থেকে jobType রিমুভ হয়ে যাবে
+            sp.delete('jobLocation');
+        }
+
+        if (searchQuery) {
+            sp.set('search', searchQuery);
+        }
+
+        if (page) {
+            sp.set('page', page)
+        }
+
+
+        // নতুন সার্চ প্যারামস দিয়ে পাথ তৈরি করা হচ্ছে
+        const searchString = sp.toString();
+        const path = searchString ? `?${searchString}` : window.location.pathname;
+
+        router.push(path);
+
+    }, [selectedJobType, router, searchQuery, selectedLocation, page]);
 
     return (
         <div className="min-h-screen bg-[#09090b] text-white p-6 md:p-12">
@@ -29,7 +70,7 @@ export default function JobListit({jobsData}) {
                 {/* Header Section */}
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-neutral-100">Explore Open Positions</h1>
-                    <p className="text-neutral-400 mt-1">Find your next frontend role at Uber Bangladesh. {jobsData.length}</p>
+                    <p className="text-neutral-400 mt-1">Find your next frontend role at Uber Bangladesh. {jobsData?.length}</p>
                 </div>
 
                 {/* Search & Filter Bar Section */}
@@ -55,7 +96,7 @@ export default function JobListit({jobsData}) {
                                 value={selectedLocation}
                                 onChange={(e) => setSelectedLocation(e.target.value)}
                             >
-                                <option value="">All Districts</option>
+                                <option value="all">All Districts</option>
                                 <option value="Dhaka">Dhaka</option>
                                 <option value="Chattogram">Chattogram</option>
                                 <option value="Sylhet">Sylhet</option>
@@ -74,7 +115,7 @@ export default function JobListit({jobsData}) {
                                 value={selectedJobType}
                                 onChange={(e) => setSelectedJobType(e.target.value)}
                             >
-                                <option value="">All Types</option>
+                                <option value="all">All Types</option>
                                 <option value="full-time">Full-time</option>
                                 <option value="part-time">Part-time</option>
                                 <option value="remote">Remote</option>
@@ -99,11 +140,13 @@ export default function JobListit({jobsData}) {
                 </div>
 
                 {/* 3x3 Grid Layout Output Section */}
-                {filteredJobs.length > 0 ? (
+                {jobsData?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredJobs.map((job, index) => (
+                        {jobsData?.map((job, index) => (
                             <JobCard key={index} job={job} />
                         ))}
+                        <PaginationWithSummary jobsData={jobsData} filters={filters} page={page} setPage={setPage}
+                            total={total} />
                     </div>
                 ) : (
                     <div className="text-center py-16 border border-dashed border-neutral-800 rounded-2xl">
@@ -115,3 +158,14 @@ export default function JobListit({jobsData}) {
         </div>
     );
 }
+
+
+
+
+
+
+
+
+
+
+
